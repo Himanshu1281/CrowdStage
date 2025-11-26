@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("ATTENDEE") // Was Role enum
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events    Event[]
+  tickets   Ticket[]
+}
+
+model Event {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  date        DateTime
+  location    String
+  imageUrl    String?
+  organizerId String
+  organizer   User        @relation(fields: [organizerId], references: [id])
+  fundingGoal Decimal
+  currentFunding Decimal  @default(0)
+  status      String      @default("DRAFT") // Was EventStatus enum
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tickets     Ticket[]
+}
+
+model Ticket {
+  id        String       @id @default(uuid())
+  eventId   String
+  event     Event        @relation(fields: [eventId], references: [id])
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  price     Decimal
+  status    String       @default("PENDING") // Was TicketStatus enum
+  qrCode    String?      // Unique string for QR generation
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  payment   Payment?
+}
+
+model Payment {
+  id             String        @id @default(uuid())
+  ticketId       String        @unique
+  ticket         Ticket        @relation(fields: [ticketId], references: [id])
+  amount         Decimal
+  providerId     String        // Easebuzz Transaction ID
+  status         String        // Was PaymentStatus enum
+  createdAt      DateTime      @default(now())
+}

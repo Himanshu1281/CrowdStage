@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "CrowdStage",
+    "slug": "crowdstage",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "crowdstage",
+    "plugins": [
+      "expo-router"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.crowdstage.app"
+    },
+    "android": {
+      "package": "com.crowdstage.app"
+    },
+    "web": {
+    }
+  }
+}
